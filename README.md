@@ -45,7 +45,7 @@
 |--------|---------|------------|
 | 🖥️ PC / Laptop | ✅ Full Support | Open in any browser |
 | 📱 Android Phone | ✅ Full Support | Open in Chrome browser |
-| 📟 Tablet | ✅ Full Support | Open in any browser |
+| 📟 Tablet | ✅ Full Support | Download Apk |
 | 🍎 iPhone / iPad | ✅ Full Support | Open in Safari or Chrome |
 
 > 💡 **No app download needed!** Just open [godgpt-wheat.vercel.app](https://godgpt-wheat.vercel.app/) in your browser on any device.
