@@ -1,4 +1,4 @@
-# ⚡ GOD GPT — Next-Generation AI Assistant
+# ⚡ GOD GPT v1.0.0 — Next-Generation AI Assistant
 
 <p align="center">
   <img src="https://godgpt-wheat.vercel.app/assets/logo-HiY1KfJa.png" width="120" alt="GOD GPT Logo" />
