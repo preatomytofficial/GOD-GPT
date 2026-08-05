@@ -1,0 +1,6 @@
+{
+  "name": "GOD GPT",
+  "description": "A modern dark-themed AI chat and image generation web application with multi-model support, local chat history, and API failover system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
