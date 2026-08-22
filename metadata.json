@@ -1,0 +1,6 @@
+{
+  "name": "GOD GPT v2.0",
+  "description": "The ultimate Social Media Growth, Viral Content, Algorithm News, and Monetization AI Assistant with multi-key failover and Thumbnail Studio.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

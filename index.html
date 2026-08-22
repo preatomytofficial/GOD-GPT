@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      (function() {
+        try {
+          var nativeFetch = window.fetch;
+          var customFetch = nativeFetch;
+          Object.defineProperty(window, 'fetch', {
+            get: function() { return customFetch; },
+            set: function(val) { customFetch = val; },
+            configurable: true,
+            enumerable: true
+          });
+        } catch (e) {
+          console.warn('Fetch setter patch error:', e);
+        }
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GOD GPT v2.0</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%238b5cf6'/><stop offset='50%' stop-color='%23ec4899'/><stop offset='100%' stop-color='%233b82f6'/></linearGradient></defs><rect width='100' height='100' rx='24' fill='%230b0d17'/><circle cx='50' cy='50' r='32' fill='none' stroke='url(%23g)' stroke-width='6'/><path d='M50 22 L62 42 L82 50 L62 58 L50 78 L38 58 L18 50 L38 42 Z' fill='url(%23g)'/></svg>" />
+    <link rel="icon" type="image/png" href="logo.png" />
+    <link rel="shortcut icon" href="logo.png" type="image/png" />
+    <link rel="apple-touch-icon" href="logo.png" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Highlight.js for Code Highlighting -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- Marked.js for Markdown Parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- 3D GALAXY PARTICLE SWARM BACKGROUND -->
+    <canvas id="bg-galaxy-canvas"></canvas>
+
+    <div id="app" class="app-container">
+      <!-- MESH GRADIENT BACKGROUND BLOBS -->
+      <div class="mesh-blob mesh-blob-1"></div>
+      <div class="mesh-blob mesh-blob-2"></div>
+
+      <!-- MOBILE HEADER / SIDEBAR TOGGLE OVERLAY -->
+      <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+      <!-- LEFT SIDEBAR -->
+      <aside id="sidebar" class="sidebar">
+        <!-- Sidebar Header -->
+        <div id="sidebar-header" class="sidebar-header">
+          <div id="brand-logo-container" class="brand-logo-container">
+            <img src="logo.png" alt="GOD GPT Logo" class="brand-logo" id="main-brand-logo" onerror="this.onerror=null; this.src='logo.svg';" />
+            <div class="brand-text">
+              <div class="brand-title-row">
+                <h1 class="brand-title">GOD GPT</h1>
+                <span class="v2-badge">v2.0</span>
+              </div>
+              <span class="brand-subtitle">SOCIAL MEDIA AI MASTER</span>
+            </div>
+          </div>
+          <button id="close-sidebar-btn" class="icon-btn mobile-only-btn" title="Close Sidebar">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- New Chat Button -->
+        <div id="new-chat-container" class="new-chat-container">
+          <button id="new-chat-btn" class="btn btn-primary new-chat-btn">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            <span>New Chat</span>
+          </button>
+        </div>
+
+        <!-- Navigation Tabs in Sidebar -->
+        <nav id="sidebar-nav" class="sidebar-nav">
+          <button id="nav-mode-chat" class="nav-tab active" data-mode="chat">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            </svg>
+            <span>AI Chat Mode</span>
+          </button>
+          <button id="nav-mode-images" class="nav-tab" data-mode="images">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span>Image Studio</span>
+          </button>
+          <button id="nav-mode-analytics" class="nav-tab" data-mode="analytics">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 3v18h18"/>
+              <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+            </svg>
+            <span>Growth Analytics</span>
+          </button>
+        </nav>
+
+        <!-- Saved Chat History List -->
+        <div id="history-section" class="history-section">
+          <div id="history-header" class="history-header">
+            <span class="history-title">Saved Chats</span>
+            <button id="clear-all-chats-btn" class="text-btn-danger" title="Clear all chat history">Clear All</button>
+          </div>
+          <div id="chat-history-list" class="chat-history-list">
+            <!-- Dynamically populated from localStorage -->
+          </div>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div id="sidebar-footer" class="sidebar-footer">
+          <button id="sidebar-settings-btn" class="btn btn-glass sidebar-action-btn">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+            </svg>
+            <span>API Settings</span>
+          </button>
+
+          <div id="author-credit" class="author-credit">
+            <span>© 2026 Made by PreatomYT • <strong style="color: var(--accent-cyan);">v2.0</strong></span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT AREA -->
+      <main id="main-content" class="main-content">
+        <!-- TOP NAVIGATION BAR -->
+        <header id="top-bar" class="top-bar">
+          <div id="top-left-section" class="top-bar-left">
+            <button id="open-sidebar-btn" class="icon-btn mobile-only-btn" title="Open Menu">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
+            </button>
+            <div id="top-brand" class="top-brand">
+              <img src="logo.png" alt="GOD GPT" class="top-brand-logo" onerror="this.onerror=null; this.src='logo.svg';" />
+              <span id="top-title" class="top-title">GOD GPT <span class="v2-badge-sm">v2.0</span></span>
+            </div>
+          </div>
+
+          <!-- Mode Switcher Tabs (Chat vs Images vs Analytics) -->
+          <div id="mode-tabs-container" class="mode-tabs-container">
+            <button id="tab-btn-chat" class="mode-tab-btn active" data-mode="chat">
+              <svg class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+              </svg>
+              <span>Chat</span>
+            </button>
+            <button id="tab-btn-images" class="mode-tab-btn" data-mode="images">
+              <svg class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span>Images</span>
+            </button>
+            <button id="tab-btn-analytics" class="mode-tab-btn" data-mode="analytics">
+              <svg class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 3v18h18"/>
+                <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+              </svg>
+              <span>Analytics</span>
+            </button>
+          </div>
+
+          <!-- Top Right Controls -->
+          <div id="top-right-section" class="top-bar-right">
+            <!-- Model Selector Dropdown -->
+            <div id="model-select-wrapper" class="model-select-wrapper">
+              <label for="model-selector" class="sr-only">Select Model</label>
+              <select id="model-selector" class="model-selector">
+                <option value="GOD GPT Pro" selected>🔥 GOD GPT Pro</option>
+                <option value="GOD GPT Ultra">⚡ GOD GPT Ultra</option>
+              </select>
+            </div>
+
+            <!-- Export Chat Button (Desktop) -->
+            <button id="export-chat-btn" class="icon-btn-text desktop-only-flex" title="Export Chat History (.txt)">
+              <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+              </svg>
+              <span>Export</span>
+            </button>
+
+            <!-- Settings Modal Trigger (Desktop) -->
+            <button id="top-settings-btn" class="icon-btn desktop-only-flex" title="API Settings">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+              </svg>
+            </button>
+
+            <!-- 3-Dot Dropdown Menu (Mobile & Desktop options including Settings) -->
+            <div id="three-dots-menu-wrapper" class="three-dots-menu-wrapper">
+              <button id="three-dots-btn" class="icon-btn" title="More Options">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="5" r="2.2"/>
+                  <circle cx="12" cy="12" r="2.2"/>
+                  <circle cx="12" cy="19" r="2.2"/>
+                </svg>
+              </button>
+              <div id="three-dots-dropdown" class="three-dots-dropdown hidden">
+                <button id="menu-item-settings" class="dropdown-item">
+                  <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                  </svg>
+                  <span>API Settings</span>
+                </button>
+                <button id="menu-item-export" class="dropdown-item">
+                  <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                  </svg>
+                  <span>Export Chat (.txt)</span>
+                </button>
+                <button id="menu-item-clear" class="dropdown-item text-danger">
+                  <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                  </svg>
+                  <span>Clear Current Chat</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- VIEW 1: CHAT MODE VIEW -->
+        <div id="chat-mode-view" class="view-panel active-view">
+          <!-- Chat Messages Scroll Container -->
+          <div id="chat-messages-container" class="chat-messages-container">
+            <!-- Welcome Hero Screen (Shown when active chat is empty) -->
+            <div id="welcome-screen" class="welcome-screen">
+              <div class="welcome-logo-wrapper">
+                <img src="logo.png" alt="GOD GPT Logo" class="welcome-logo" onerror="this.onerror=null; this.src='logo.svg';" />
+                <div class="glow-ring"></div>
+              </div>
+              <h2 class="welcome-title">How can <span class="gradient-text">GOD GPT v2.0</span> grow your Social Media?</h2>
+              <p class="welcome-subtitle">Your A-to-Z AI Strategist for Viral Hooks, Algorithm News & Audience Growth across YouTube, Facebook, Instagram, TikTok & X.</p>
+
+              <!-- Quick Suggestion Cards -->
+              <div id="suggestion-grid" class="suggestion-grid">
+                <button class="suggestion-card" data-prompt="Write 10 high-retention viral hook formulas for YouTube Shorts, Instagram Reels & TikTok with examples.">
+                  <div class="suggestion-icon">🚀</div>
+                  <div class="suggestion-content">
+                    <span class="suggestion-title">Viral Shorts & Reels Hooks</span>
+                    <span class="suggestion-desc">10 magnetic 3-second hook formulas</span>
+                  </div>
+                </button>
+                <button class="suggestion-card" data-prompt="How can I organically grow my Facebook Page and Reels reach fast in 2026? Give me an A-to-Z step-by-step strategy.">
+                  <div class="suggestion-icon">📈</div>
+                  <div class="suggestion-content">
+                    <span class="suggestion-title">Facebook Organic Growth</span>
+                    <span class="suggestion-desc">Reach hacks, algorithm tips & schedule</span>
+                  </div>
+                </button>
+                <button class="suggestion-card" data-prompt="What are the latest social media news, algorithm updates, and viral content trends across YouTube, Meta, and TikTok right now?">
+                  <div class="suggestion-icon">📰</div>
+                  <div class="suggestion-content">
+                    <span class="suggestion-title">Social Media News & Updates</span>
+                    <span class="suggestion-desc">Latest algorithm shifts & platform features</span>
+                  </div>
+                </button>
+                <button class="suggestion-card" data-prompt="Explain how to monetize my social media accounts (YouTube, Facebook Reels, Instagram) step-by-step to start earning.">
+                  <div class="suggestion-icon">💰</div>
+                  <div class="suggestion-content">
+                    <span class="suggestion-title">Monetization & Earnings</span>
+                    <span class="suggestion-desc">A-to-Z guide on Reels bonus, AdSense & deals</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Chat Message Thread (Populated via JS) -->
+            <div id="message-list" class="message-list"></div>
+
+            <!-- Typing Animation Loader -->
+            <div id="typing-indicator" class="typing-indicator hidden">
+              <div class="avatar ai-avatar">
+                <img src="logo.png" alt="GOD GPT Avatar" />
+              </div>
+              <div class="message-content glass-card typing-box">
+                <div class="typing-dots">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <span class="typing-text">GOD GPT is generating response...</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Chat Input Area -->
+          <div id="chat-input-wrapper" class="chat-input-wrapper">
+            <div id="chat-input-box" class="chat-input-box glass-card">
+              <textarea
+                id="user-prompt-input"
+                class="user-prompt-input"
+                placeholder="Message GOD GPT..."
+                rows="1"
+              ></textarea>
+              <div class="input-actions-bar">
+                <div class="input-left-tools">
+                  <button id="quick-image-mode-btn" class="icon-tool-btn" title="Switch to Image Studio">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    <span>Image Studio</span>
+                  </button>
+                  <button id="clear-current-chat-btn" class="icon-tool-btn" title="Clear Chat Messages">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                    </svg>
+                    <span>Clear</span>
+                  </button>
+                </div>
+
+                <div class="input-right-tools">
+                  <span id="active-model-badge" class="active-model-badge">GOD GPT Ultra</span>
+                  <button id="send-btn" class="send-btn" title="Send Message">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <line x1="22" y1="2" x2="11" y2="13"/>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <p class="input-disclaimer">GOD GPT may produce accurate AI output. Check API Settings for multi-key failover system.</p>
+          </div>
+        </div>
+
+        <!-- VIEW 2: IMAGE GENERATION STUDIO VIEW -->
+        <div id="image-mode-view" class="view-panel hidden-view">
+          <div id="image-studio-container" class="image-studio-container">
+            <!-- Image Generator Control Panel -->
+            <div id="image-control-card" class="image-control-card glass-card">
+              <div class="studio-header">
+                <div class="studio-title-block">
+                  <h2 class="studio-heading">GOD GPT Thumbnail & Graphics Studio</h2>
+                  <p class="studio-subtext">Generate high-CTR YouTube thumbnails, Instagram post covers, channel logos, and viral graphics.</p>
+                </div>
+              </div>
+
+              <!-- Prompt Input Area -->
+              <div class="image-prompt-field-group">
+                <label for="image-prompt-input" class="input-label">Describe your Thumbnail or Graphic vision</label>
+                <textarea
+                  id="image-prompt-input"
+                  class="image-prompt-input"
+                  placeholder="e.g. High-CTR YouTube thumbnail design with a shocked face expression, glowing neon purple 3D text '10X VIRAL GROWTH', dark galaxy background, ultra-detailed 8k..."
+                  rows="3"
+                ></textarea>
+              </div>
+
+              <!-- Aspect Ratio Selection -->
+              <div class="aspect-ratio-selector-group">
+                <span class="input-label">Aspect Ratio</span>
+                <div id="aspect-ratio-options" class="aspect-ratio-options">
+                  <button class="aspect-chip active" data-aspect="1:1">
+                    <span class="aspect-icon box-1-1"></span>
+                    <span>1:1 Square</span>
+                  </button>
+                  <button class="aspect-chip" data-aspect="16:9">
+                    <span class="aspect-icon box-16-9"></span>
+                    <span>16:9 Widescreen</span>
+                  </button>
+                  <button class="aspect-chip" data-aspect="9:16">
+                    <span class="aspect-icon box-9-16"></span>
+                    <span>9:16 Portrait</span>
+                  </button>
+                  <button class="aspect-chip" data-aspect="4:3">
+                    <span class="aspect-icon box-4-3"></span>
+                    <span>4:3 Classic</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Preset Prompt Chips -->
+              <div class="preset-prompts-group">
+                <span class="input-label">Inspiration Presets</span>
+                <div class="preset-chips-scroll">
+                  <button class="preset-chip" data-preset="Futuristic Cyberpunk Metropolis with neon reflection puddles, volumetric fog, 8k, cinematic unreal engine 5 render">🌆 Cyberpunk City</button>
+                  <button class="preset-chip" data-preset="3D metallic chrome warrior mascot logo with glowing neon blue highlights, black background, high resolution">🛡️ 3D Chrome Mascot</button>
+                  <button class="preset-chip" data-preset="Serene Japanese Zen garden with pink cherry blossom trees, glowing lanterns, morning mist, photorealistic">🌸 Zen Garden</button>
+                  <button class="preset-chip" data-preset="Cute astronaut cat floating in space near a colorful nebula galaxy, digital concept art">🐱 Space Cat</button>
+                </div>
+              </div>
+
+              <!-- Action Bar -->
+              <div class="studio-action-bar">
+                <button id="generate-image-btn" class="btn btn-primary generate-image-btn">
+                  <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                  <span>Generate Masterpiece</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Image Gallery Section -->
+            <div id="image-gallery-section" class="image-gallery-section">
+              <div class="gallery-header">
+                <h3 class="gallery-title">Generated Creations</h3>
+                <button id="clear-gallery-btn" class="text-btn-danger">Clear Gallery</button>
+              </div>
+
+              <div id="image-gallery-grid" class="image-gallery-grid">
+                <!-- Dynamically populated generated images -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 3: GROWTH ANALYTICS DASHBOARD VIEW -->
+        <div id="growth-analytics-view" class="view-panel hidden-view">
+          <div id="growth-analytics-view-root" class="growth-analytics-view-root"></div>
+        </div>
+      </main>
+
+      <!-- SETTINGS MODAL -->
+      <div id="settings-modal" class="modal-backdrop hidden">
+        <div id="settings-modal-card" class="modal-card glass-card">
+          <div class="modal-header">
+            <div class="modal-title-group">
+              <svg class="icon-md highlight-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+              </svg>
+              <div>
+                <h3 class="modal-title">API Settings</h3>
+                <p class="modal-subtitle">Configure Main API Key and Image Generation API Key.</p>
+              </div>
+            </div>
+            <button id="close-settings-modal-btn" class="icon-btn" title="Close Settings">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="modal-body custom-scrollbar">
+            <!-- Primary API Field -->
+            <div class="api-field-group primary-field">
+              <label for="main-api-key-input" class="input-label flex-between">
+                <span>🔑 Main API Key (Primary)</span>
+              </label>
+              <div class="input-password-wrapper">
+                <input
+                  type="password"
+                  id="main-api-key-input"
+                  class="input-field"
+                  placeholder="Enter your primary API key (e.g. Gemini, OpenAI, OpenRouter)"
+                />
+                <button class="toggle-password-btn" data-target="main-api-key-input" title="Show/Hide Key">👁️</button>
+              </div>
+              <div class="api-field-helper">
+                <a
+                  href="https://openrouter.ai/workspaces/default/keys"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="api-key-get-link"
+                  id="get-main-api-key-link"
+                >
+                  <svg class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                  <span>Get The API Key (Click here to open link in a new tab)</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="api-field-group primary-field" style="margin-top: 16px;">
+              <label for="image-api-key-input" class="input-label flex-between">
+                <span>🖼️ Image Generation API Key</span>
+              </label>
+              <div class="input-password-wrapper">
+                <input
+                  type="password"
+                  id="image-api-key-input"
+                  class="input-field"
+                  placeholder="Enter your Image Generation API key (optional)"
+                />
+                <button class="toggle-password-btn" data-target="image-api-key-input" title="Show/Hide Key">👁️</button>
+              </div>
+              <div class="api-field-helper">
+                <a
+                  href="https://aistudio.google.com/app/apikey"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="api-key-get-link"
+                  id="get-image-api-key-link"
+                >
+                  <svg class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                  <span>Get Google Image / Gemini API Key (Click here to open link in a new tab)</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button id="clear-keys-btn" class="btn btn-secondary">Clear All Keys</button>
+            <button id="save-settings-btn" class="btn btn-primary">Save Settings & Keys</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RENAME CHAT MODAL -->
+      <div id="rename-modal" class="modal-backdrop hidden">
+        <div class="modal-card modal-small glass-card">
+          <div class="modal-header">
+            <h3 class="modal-title">Rename Chat</h3>
+            <button id="close-rename-modal-btn" class="icon-btn">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <label for="rename-chat-input" class="input-label">Chat Title</label>
+            <input type="text" id="rename-chat-input" class="input-field" placeholder="New Chat Title" />
+          </div>
+          <div class="modal-footer">
+            <button id="cancel-rename-btn" class="btn btn-secondary">Cancel</button>
+            <button id="confirm-rename-btn" class="btn btn-primary">Save Title</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- IMAGE HIGH-RES PREVIEW MODAL -->
+      <div id="image-preview-modal" class="modal-backdrop hidden">
+        <div class="modal-card modal-image-preview glass-card">
+          <div class="modal-header">
+            <h3 id="preview-image-title" class="modal-title">Generated Artwork</h3>
+            <button id="close-image-modal-btn" class="icon-btn">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <div class="modal-body image-preview-body">
+            <img id="preview-image-element" src="" alt="Generated artwork high resolution preview" />
+            <p id="preview-image-prompt" class="preview-prompt-text"></p>
+          </div>
+          <div class="modal-footer">
+            <button id="copy-image-prompt-btn" class="btn btn-secondary">Copy Prompt</button>
+            <a id="download-image-btn" href="#" download="god-gpt-creation.png" class="btn btn-primary">Download Image</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOAST NOTIFICATION POPUP -->
+      <div id="toast-container" class="toast-container"></div>
+    </div>
+
+    <!-- Application Script -->
+    <script src="app.js" type="module"></script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

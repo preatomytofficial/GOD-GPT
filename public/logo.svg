@@ -1,0 +1,32 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'>
+  <defs>
+    <linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#0f0c1b'/>
+      <stop offset='50%' stop-color='#181028'/>
+      <stop offset='100%' stop-color='#0b1329'/>
+    </linearGradient>
+    <linearGradient id='glow' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#a855f7'/>
+      <stop offset='50%' stop-color='#ec4899'/>
+      <stop offset='100%' stop-color='#00d2ff'/>
+    </linearGradient>
+    <linearGradient id='gold' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#f59e0b'/>
+      <stop offset='100%' stop-color='#d97706'/>
+    </linearGradient>
+    <filter id='shadow' x='-20%' y='-20%' width='140%' height='140%'>
+      <feDropShadow dx='0' dy='8' stdDeviation='12' flood-color='#a855f7' flood-opacity='0.6'/>
+    </filter>
+  </defs>
+  <rect width='512' height='512' rx='128' fill='url(#bg)'/>
+  <rect width='496' height='496' x='8' y='8' rx='120' fill='none' stroke='url(#glow)' stroke-width='4' opacity='0.5'/>
+  <!-- Outer glowing ring -->
+  <circle cx='256' cy='256' r='180' fill='none' stroke='url(#glow)' stroke-width='10' filter='url(#shadow)'/>
+  <circle cx='256' cy='256' r='140' fill='none' stroke='#00d2ff' stroke-width='3' stroke-dasharray='12 8' opacity='0.8'/>
+  <!-- Central emblem - GOD GPT Star / Crown / AI Diamond -->
+  <path d='M256 96 L296 216 L416 256 L296 296 L256 416 L216 296 L96 256 L216 216 Z' fill='url(#glow)' filter='url(#shadow)'/>
+  <path d='M256 160 L280 232 L352 256 L280 280 L256 352 L232 280 L160 256 L232 232 Z' fill='#ffffff' opacity='0.9'/>
+  <!-- Inner core dot -->
+  <circle cx='256' cy='256' r='24' fill='#ffffff'/>
+  <circle cx='256' cy='256' r='12' fill='url(#glow)'/>
+</svg>
