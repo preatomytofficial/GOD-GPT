@@ -48,7 +48,7 @@
 | 📟 Tablet | ✅ Full Support | Download Apk |
 | 🍎 iPhone / iPad | ✅ Full Support | Open in Safari or Chrome |
 
-> 💡 **No app download needed!** Just open [godgpt-wheat.vercel.app](https://godgpt-wheat.vercel.app/) in your browser on any device.
+> 💡 **No app download needed!** Just open [godgpt-v2.vercel.app/](https://godgpt-v2.vercel.app/) in your browser on any device.
 >
 > **Android Tip:** Open Chrome → tap the 3-dot menu → **"Add to Home Screen"** — GOD GPT will work like a real app on your phone! 📲
 
