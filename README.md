@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-  <a href="https://godgpt-wheat.vercel.app/"><b>🌐 Live Demo → godgpt-wheat.vercel.app</b></a>
+  <a href="https://godgpt-v2.vercel.app/"><b>🌐 Live Demo → godgpt-v2.vercel.app</b></a>
 </p>
 
 ---
