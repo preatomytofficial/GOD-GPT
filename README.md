@@ -89,7 +89,7 @@ GOD GPT supports multiple AI providers. Choose the one that fits you best:
 ## 🚀 How to Get Started
 
 ### Step 1 — Open GOD GPT
-👉 Go to **[godgpt-wheat.vercel.app](https://godgpt-wheat.vercel.app/)** on any device.
+👉 Go to **[godgpt-v2.vercel.app](https://godgpt-v2.vercel.app/)** on any device.
 
 ### Step 2 — Get a Free API Key
 Go to [**Google AI Studio**](https://aistudio.google.com/app/apikey) → Sign in with Google → Click **"Create API Key"** → Copy the key.
